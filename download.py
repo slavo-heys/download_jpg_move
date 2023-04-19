@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 
-# przeszukiwanie strony pod kątem linków do listy
+# utwórz pająka który będzie przeszukiwał stronę i podstrony i zapisywał wszystkie linki do listy, na końcu wyświetli listę linków
 def get_links(url):
     links = []
     
@@ -28,7 +28,7 @@ def get_images(links):
     except:
         pass
 
-    # sprawdzanie czy na poszczegolnych stronach są zdjęcia
+    # sprawdz czy na poszczegolnych stronach są zdjęcia
     for link in links:
         try:
             r = requests.get(link)
@@ -51,7 +51,7 @@ def get_films(links):
     except:
         pass
 
-    # sprawdzanie czy na poszczegolnych stronach są filmy
+    # sprawdz czy na poszczegolnych stronach są filmy
     for link in links:
         try:
             r = requests.get(link)
@@ -67,6 +67,21 @@ def get_films(links):
         except:
             print("Nie udało się pobrać filmu" + link)
 
+# funkcja rekurencyjnie usuwająca pliki z folderu i jego podfolderów
+def remove_small_images(path, min_width, min_height):
+    for dirpath, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            if filename.lower().endswith(('.jpg', '.png', '.gif', '.webp')):
+                filepath = os.path.join(dirpath, filename)
+                try:
+                    with Image.open(filepath) as img:
+                        width, height = img.size
+                        if width < min_width or height < min_height:
+                            os.remove(filepath)
+                            print(f"Usunięto plik: {filepath}")
+                except:
+                    print(f"Nie można otworzyć pliku: {filepath}")
+
 
 # użytkownik podaje adres URL do przeszukania
 url = input("Podaj adres URL (https://xxx.xx): ")
@@ -74,10 +89,19 @@ url = input("Podaj adres URL (https://xxx.xx): ")
 # użytkownik podaje co chce ściągnąć (zdjęcia, pliki)
 co = input("Co chcesz ściągnąć?\n\n1. zdjęcia,  \n2. filmy: ")
 
-
-# uruchom program
-if co == "1":    
+if co == "1":
+    # uruchom program
     get_images(get_links(url))
+    # ożytkownik decyduje czy chce usunąć małe zdjęcia
+    odp = input("Czy chcesz usunąć małe zdjęcia? (t/n): ")
+    if odp == "t":
+        # użytkownik podaje minimalny rozmiar zdjęcia
+        min_width = int(input("Podaj minimalną szerokość zdjęcia: "))
+        min_height = int(input("Podaj minimalną wysokość zdjęcia: "))
+        # usuń małe zdjęcia
+        remove_small_images("ZDJECIA", min_width, min_height)
+    else:
+        pass
 elif co == "2":
     get_films(get_links(url))
 else:
