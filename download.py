@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from PIL import Image
 import os
 
 # utwórz pająka który będzie przeszukiwał stronę i podstrony i zapisywał wszystkie linki do listy, na końcu wyświetli listę linków
