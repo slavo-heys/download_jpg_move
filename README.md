@@ -11,3 +11,4 @@ Prosty program który pozwoli na
 Niezbędne biblioteki:
 * pip install bs4
 * pip install requests
+* pip install Pillow
