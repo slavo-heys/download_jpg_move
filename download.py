@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 
-# utwórz pająka który będzie przeszukiwał stronę i podstrony i zapisywał wszystkie linki do listy, na końcu wyświetli listę linków
+# przeszukiwanie strony pod kątem linków do listy
 def get_links(url):
     links = []
     
@@ -28,7 +28,7 @@ def get_images(links):
     except:
         pass
 
-    # sprawdz czy na poszczegolnych stronach są zdjęcia
+    # sprawdzanie czy na poszczegolnych stronach są zdjęcia
     for link in links:
         try:
             r = requests.get(link)
@@ -51,7 +51,7 @@ def get_films(links):
     except:
         pass
 
-    # sprawdz czy na poszczegolnych stronach są filmy
+    # sprawdzanie czy na poszczegolnych stronach są filmy
     for link in links:
         try:
             r = requests.get(link)
@@ -74,8 +74,9 @@ url = input("Podaj adres URL (https://xxx.xx): ")
 # użytkownik podaje co chce ściągnąć (zdjęcia, pliki)
 co = input("Co chcesz ściągnąć?\n\n1. zdjęcia,  \n2. filmy: ")
 
-if co == "1":
-    # uruchom program
+
+# uruchom program
+if co == "1":    
     get_images(get_links(url))
 elif co == "2":
     get_films(get_links(url))
